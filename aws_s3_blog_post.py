@@ -11,8 +11,8 @@ print(s3_client)
 # s3.ServiceResource()
 
 
-# create a bucket
-s3_client.create_bucket(Bucket='andre.gets.buckets')
+# create bucket and set bucket object
+andre_bucket = s3_client.create_bucket(Bucket='andre.gets.buckets')
 
 # view all bucket names
 for bucket in s3_client.buckets.all():
@@ -20,7 +20,6 @@ for bucket in s3_client.buckets.all():
 
 
 # add objects to a specific bucket
-andre_bucket = s3_client.Bucket('andre.gets.buckets')
 andre_bucket.put_object(Key='andre/added/a/new/object1')
 andre_bucket.put_object(Key='andre/added/a/new/object2')
 andre_bucket.put_object(Key='andre/added/a/new/object3')
@@ -35,11 +34,10 @@ for obj in andre_bucket.objects.all():
 
 
 # upload local csv to a specific s3 bucket
-bucket_name_str = 'andre.gets.buckets'
 local_file_path = '/Users/andreviolante/Desktop/data.csv'
 key_object = 'andre/added/a/new/object/data.csv'
 
-s3_client.Bucket(bucket_name_str).upload_file(local_file_path, key_object)
+andre_bucket.upload_file(local_file_path, key_object)
 
 # view newly uploaded data object
 for obj in andre_bucket.objects.all():
@@ -57,10 +55,11 @@ andre_bucket.download_file(key_object, filename)
 
 
 # delete a specific object
-s3_client.Object(bucket_name_str, 'andre/added/a/new/object2').delete()
+andre_bucket.Object('andre/added/a/new/object2').delete()
 
 for obj in andre_bucket.objects.all():
     print(obj.key)
+
 
 # delete the rest of objects in a bucket
 andre_bucket.objects.delete()
@@ -69,10 +68,9 @@ for obj in andre_bucket.objects.all():
     print(obj.key)
 
 
-# delete specific bucket
+# delete a specific bucket
 andre_bucket.delete()
 
 # view all bucket names again
 for bucket in s3_client.buckets.all():
     print(bucket.name)
-
